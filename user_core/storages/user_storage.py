@@ -1,5 +1,7 @@
 from typing import List
 
+from django.core.exceptions import ObjectDoesNotExist
+
 from user_core.dtos import UserDTO, CreateUserParamsDTO
 from user_core.interactor.storage_interfaces.user_storage_interface import UserStorageInterface
 from user_core.models import models
@@ -29,3 +31,13 @@ class UserStorage(UserStorageInterface):
             )
             for user_obj in user_objs
         ]
+
+    def is_user_id_exists(self,user_id:str) -> bool:
+        return models.User.objects.filter(id=user_id).exists()
+
+    def is_user_active(self, user_id: str) -> bool:
+        try:
+            user_obj = models.User.objects.get(id=user_id)
+            return user_obj.is_active
+        except ObjectDoesNotExist:
+            return False

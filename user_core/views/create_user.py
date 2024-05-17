@@ -15,7 +15,7 @@ def create_user(request):
     user_dto = CreateUserParamsDTO(
         name=post_body["full_name"],
         manager_id=post_body.get("manager_id"),
-        mobile_number=post_body["mob_num"],
+        mobile_number=post_body["mobile_number"],
         pan_number=post_body["pan_num"]
     )
 
