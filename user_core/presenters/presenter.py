@@ -69,3 +69,18 @@ class Presenter(PresenterInterface):
         }
         response_json = json.dumps(response_dict)
         return HttpResponse(response_json, content_type='application/json', status=200)
+
+    def get_response_for_delete_user(self,user_id:str) -> HttpResponse:
+        response_dict = {
+            "message" : "User Deleted",
+            "user_id": user_id
+        }
+        response_json = json.dumps(response_dict)
+        return HttpResponse(response_json, content_type='application/json', status=200)
+
+    def get_no_user_deleted_http_error(self) -> HttpResponse:
+        response_dict = {
+            "message": "No user found to delete"
+        }
+        response_json = json.dumps(response_dict)
+        return HttpResponse(response_json, content_type='application/json', status=404)

@@ -27,3 +27,9 @@ class GetUsersParamsDTO:
     user_id: str
     mobile_number: Optional[str]
     manager_id:Optional[str]
+
+
+@dataclass
+class DeleteUserParamsDTO:
+    user_id:str
+    mobile_number: str

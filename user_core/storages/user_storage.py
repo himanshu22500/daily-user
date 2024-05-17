@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from django.core.exceptions import ObjectDoesNotExist
 
-from user_core.dtos import UserDTO, CreateUserParamsDTO, GetUsersParamsDTO
+from user_core.dtos import UserDTO, CreateUserParamsDTO, GetUsersParamsDTO, DeleteUserParamsDTO
 from user_core.interactor.storage_interfaces.user_storage_interface import UserStorageInterface
 from user_core.models import models
 class UserStorage(UserStorageInterface):
@@ -71,3 +71,20 @@ class UserStorage(UserStorageInterface):
 
         all_user_objs = models.User.objects.all()
         return self._create_user_dto_list(user_objs=all_user_objs)
+
+
+    def delete_user(self, delete_user_params:DeleteUserParamsDTO) -> str:
+        deleted_user_id = None
+
+        if delete_user_params.user_id:
+            models.User.objects.filter(id=delete_user_params.user_id).delete()
+            deleted_user_id = delete_user_params.user_id
+
+        if delete_user_params.mobile_number:
+            user = models.User.objects.filter(mobile_number=delete_user_params.mobile_number).first()
+
+            if user:
+                deleted_user_id = str(user.id)
+                user.delete()
+
+        return deleted_user_id

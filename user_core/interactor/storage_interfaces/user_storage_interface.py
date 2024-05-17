@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from typing import List
-from user_core.dtos import UserDTO, CreateUserParamsDTO, GetUsersParamsDTO
+from user_core.dtos import UserDTO, CreateUserParamsDTO, GetUsersParamsDTO, DeleteUserParamsDTO
 
 
 class UserStorageInterface:
@@ -18,4 +18,8 @@ class UserStorageInterface:
 
     @abstractmethod
     def filter_users(self, get_users_params:GetUsersParamsDTO) -> List[UserDTO]:
+        pass
+
+    @abstractmethod
+    def delete_user(self, delete_user_params:DeleteUserParamsDTO) -> str:
         pass

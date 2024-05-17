@@ -16,3 +16,6 @@ class ManagerDoesNotExists(Exception):
 class DeactivatedManager(Exception):
     def __init__(self, manager_id:str):
         self.manager_id = manager_id
+
+class NoMatchingUserFound(Exception):
+    pass

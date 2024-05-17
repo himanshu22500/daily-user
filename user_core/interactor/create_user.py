@@ -52,7 +52,7 @@ class CreateUserInteractor(UUIDMixin):
         elif mobile_number.startswith('+91'):
             mobile_number = mobile_number[3:]
 
-        is_mobile_number_valid = True
+        is_mobile_number_valid = len(mobile_number) == 10
         for num in mobile_number:
             if num not in "0123456789":
                 is_mobile_number_valid = False
