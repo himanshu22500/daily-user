@@ -54,8 +54,3 @@ python manage.py runserver
 
 Now, you can access the project at `http://127.0.0.1:8000/` and the admin panel at `http://127.0.0.1:8000/admin`.
 `
-
-
-Sure, here's how you can add the steps to create and activate a virtual environment in your `README.md` file:
-
-```markdown
