@@ -1,4 +1,6 @@
 from abc import abstractmethod
+from typing import List
+
 from django.http import HttpResponse
 from user_core.dtos import UserDTO
 
@@ -9,5 +11,21 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_error_http(self) -> HttpResponse:
+    def get_empty_full_name_http_error(self) -> HttpResponse:
+        pass
+
+    @abstractmethod
+    def get_invalid_mobile_number_http_error(self, mobile_number:str) -> HttpResponse:
+        pass
+
+    @abstractmethod
+    def get_manager_not_found_http_error(self, manager_id:str) -> HttpResponse:
+        pass
+
+    @abstractmethod
+    def get_deactivated_manager_id_http_error(self, manager_id:str) -> HttpResponse:
+        pass
+
+    @abstractmethod
+    def get_response_for_get_users(self, user_dtos:List[UserDTO]) -> HttpResponse:
         pass

@@ -16,10 +16,16 @@ class CreateUserInteractor(UUIDMixin):
     def create_user_wrapper(self, user_dto:CreateUserParamsDTO, presenter:PresenterInterface) -> HttpResponse:
         try:
             user_dto = self.create_user(user_dto=user_dto)
-        except Exception:
-            return presenter.get_error_http()
-
-        return presenter.get_response_for_create_user(user_dto=user_dto)
+        except FullNameCanNotBeEmpty:
+            return presenter.get_empty_full_name_http_error()
+        except InvalidMobileNumber as err:
+            return presenter.get_invalid_mobile_number_http_error(mobile_number=err.mobile_number)
+        except ManagerDoesNotExists as err:
+            return presenter.get_manager_not_found_http_error(manager_id=err.manager_id)
+        except DeactivatedManager as err:
+            return presenter.get_deactivated_manager_id_http_error(manager_id=err.manager_id)
+        else:
+            return presenter.get_response_for_create_user(user_dto=user_dto)
 
     def create_user(self, user_dto:CreateUserParamsDTO) -> UserDTO:
         self._validate_params(user_dto=user_dto)
@@ -36,7 +42,8 @@ class CreateUserInteractor(UUIDMixin):
         pan_number = self._validate_and_adjust_pan_number(pan_number=user_dto.pan_number)
         user_dto.pan_number = pan_number
 
-        self._validate_manager_id(manager_id=user_dto.manager_id)
+        if user_dto.manager_id:
+            self._validate_manager_id(manager_id=user_dto.manager_id)
 
     @staticmethod
     def _validate_and_adjust_mobile_number(mobile_number:str):

@@ -1,6 +1,7 @@
 from abc import abstractmethod
 from typing import List
-from user_core.dtos import UserDTO, CreateUserParamsDTO
+from user_core.dtos import UserDTO, CreateUserParamsDTO, GetUsersParamsDTO
+
 
 class UserStorageInterface:
     @abstractmethod
@@ -13,4 +14,8 @@ class UserStorageInterface:
 
     @abstractmethod
     def is_user_active(self, user_id:str) -> bool:
+        pass
+
+    @abstractmethod
+    def filter_users(self, get_users_params:GetUsersParamsDTO) -> List[UserDTO]:
         pass
