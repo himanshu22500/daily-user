@@ -52,7 +52,16 @@ class Presenter(PresenterInterface):
         return HttpResponse(response_json, content_type='application/json', status=404)
 
     def get_response_for_get_users(self, user_dtos:List[UserDTO]) -> HttpResponse:
-        user_dicts = [
+        user_dicts = self._get_user_dicts(user_dtos=user_dtos)
+        response_dict = {
+            "users":user_dicts,
+        }
+        response_json = json.dumps(response_dict)
+        return HttpResponse(response_json, content_type='application/json', status=200)
+
+    @staticmethod
+    def _get_user_dicts(user_dtos:List[UserDTO]):
+        return [
             {
                 "user_id": dto.user_id,
                 "full_name": dto.name,
@@ -64,11 +73,6 @@ class Presenter(PresenterInterface):
             }
             for dto in user_dtos
         ]
-        response_dict = {
-            "users":user_dicts,
-        }
-        response_json = json.dumps(response_dict)
-        return HttpResponse(response_json, content_type='application/json', status=200)
 
     def get_response_for_delete_user(self,user_id:str) -> HttpResponse:
         response_dict = {
@@ -84,3 +88,12 @@ class Presenter(PresenterInterface):
         }
         response_json = json.dumps(response_dict)
         return HttpResponse(response_json, content_type='application/json', status=404)
+
+    def get_response_for_update_user(self,user_dtos:List[UserDTO]) -> HttpResponse:
+        user_dicts = self._get_user_dicts(user_dtos=user_dtos)
+        response_dict = {
+            "message":"Users updated successfully",
+            "users": user_dicts
+        }
+        response_json = json.dumps(response_dict)
+        return HttpResponse(response_json, content_type='application/json', status=200)

@@ -37,3 +37,7 @@ class PresenterInterface:
     @abstractmethod
     def get_no_user_deleted_http_error(self) -> HttpResponse:
         pass
+
+    @abstractmethod
+    def get_response_for_update_user(self,user_dtos:List[UserDTO]) -> HttpResponse:
+        pass

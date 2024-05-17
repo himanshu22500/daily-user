@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 
 
@@ -33,3 +33,12 @@ class GetUsersParamsDTO:
 class DeleteUserParamsDTO:
     user_id:str
     mobile_number: str
+
+
+@dataclass
+class UpdateUserParamsDTO:
+    user_ids: List[str]
+    name: Optional[str]
+    mobile_number: Optional[str]
+    pan_number: Optional[str]
+    manager_id: Optional[str]

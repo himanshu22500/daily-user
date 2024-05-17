@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from django.core.exceptions import ObjectDoesNotExist
 
-from user_core.dtos import UserDTO, CreateUserParamsDTO, GetUsersParamsDTO, DeleteUserParamsDTO
+from user_core.dtos import UserDTO, CreateUserParamsDTO, GetUsersParamsDTO, DeleteUserParamsDTO, UpdateUserParamsDTO
 from user_core.interactor.storage_interfaces.user_storage_interface import UserStorageInterface
 from user_core.models import models
 class UserStorage(UserStorageInterface):
@@ -36,6 +36,19 @@ class UserStorage(UserStorageInterface):
             )
             for user_obj in user_objs
         ]
+
+    @staticmethod
+    def _create_user_dto(user_obj):
+        return UserDTO(
+                user_id=str(user_obj.id),
+                name=user_obj.name,
+                mobile_number=user_obj.mobile_number,
+                pan_number=user_obj.pan_number,
+                manager_id=str(user_obj.manager_id.id) if user_obj.manager_id else None,
+                is_active=user_obj.is_active,
+                created_at=user_obj.created_at,
+                updated_at=user_obj.updated_at
+            )
 
     def is_user_id_exists(self,user_id:str) -> bool:
         return models.User.objects.filter(id=user_id).exists()
@@ -88,3 +101,37 @@ class UserStorage(UserStorageInterface):
                 user.delete()
 
         return deleted_user_id
+
+    def get_valid_user_ids(self, user_ids:List[str]) -> List[str]:
+        valid_user_ids = models.User.objects.filter(id__in=user_ids).values_list('id', flat=True)
+        return [str(user_id) for user_id in valid_user_ids]
+
+    def update_user_manager_bulk(self, user_ids:List[str], manager_id:str) -> List[UserDTO]:
+        manager_user_obj = self._get_manager_obj(user_id=manager_id)
+        user_objs = models.User.objects.filter(id__in=user_ids)
+        for user_obj in user_objs:
+            user_obj.manager_id = manager_user_obj
+
+        models.User.objects.bulk_update(user_objs, fields=["manager_id"])
+        return self._create_user_dto_list(user_objs=user_objs)
+
+    def update_user_data(self, user_id:str, update_user_params_dto:UpdateUserParamsDTO) -> UserDTO:
+        user_obj = models.User.objects.get(id=user_id)
+
+        if update_user_params_dto.name:
+            user_obj.name = update_user_params_dto.name
+
+        if update_user_params_dto.pan_number:
+            user_obj.pan_number = update_user_params_dto.pan_number
+
+        if update_user_params_dto.mobile_number:
+            user_obj.mobile_number = update_user_params_dto.mobile_number
+
+        if update_user_params_dto.manager_id:
+            manager_user_obj = self._get_manager_obj(user_id=update_user_params_dto.manager_id)
+            user_obj.manager_id = manager_user_obj
+
+
+        user_obj.save()
+        return self._create_user_dto(user_obj=user_obj)
+

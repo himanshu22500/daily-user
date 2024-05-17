@@ -1,3 +1,6 @@
+from typing import List
+
+
 class FullNameCanNotBeEmpty(Exception):
     pass
 
@@ -19,3 +22,11 @@ class DeactivatedManager(Exception):
 
 class NoMatchingUserFound(Exception):
     pass
+
+class InvalidUserIds(Exception):
+    def __init__(self, user_ids:List[str]):
+        self.user_ids = user_ids
+
+class InvalidParamsForBulkUpdate(Exception):
+    def __init__(self, fields:List[str]):
+        self.fields = fields

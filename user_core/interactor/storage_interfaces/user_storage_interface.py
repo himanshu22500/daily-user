@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from typing import List
-from user_core.dtos import UserDTO, CreateUserParamsDTO, GetUsersParamsDTO, DeleteUserParamsDTO
+from user_core.dtos import UserDTO, CreateUserParamsDTO, GetUsersParamsDTO, DeleteUserParamsDTO, UpdateUserParamsDTO
 
 
 class UserStorageInterface:
@@ -22,4 +22,16 @@ class UserStorageInterface:
 
     @abstractmethod
     def delete_user(self, delete_user_params:DeleteUserParamsDTO) -> str:
+        pass
+
+    @abstractmethod
+    def get_valid_user_ids(self, user_ids:List[str]) -> List[str]:
+        pass
+
+    @abstractmethod
+    def update_user_manager_bulk(self, user_ids:List[str], manager_id:str) -> List[UserDTO]:
+        pass
+
+    @abstractmethod
+    def update_user_data(self, user_id:str, update_user_params_dto:UpdateUserParamsDTO) -> UserDTO:
         pass
