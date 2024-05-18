@@ -21,6 +21,8 @@ class CreateUserInteractor(ValidationMixin):
             return presenter.get_invalid_mobile_number_http_error(mobile_number=err.mobile_number)
         except ManagerDoesNotExists as err:
             return presenter.get_manager_not_found_http_error(manager_id=err.manager_id)
+        except InvalidManagerId as err:
+            return presenter.get_manager_not_found_http_error(manager_id=err.manager_id)
         except DeactivatedManager as err:
             return presenter.get_deactivated_manager_id_http_error(manager_id=err.manager_id)
         else:

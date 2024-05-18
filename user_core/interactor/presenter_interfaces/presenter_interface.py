@@ -41,3 +41,10 @@ class PresenterInterface:
     @abstractmethod
     def get_response_for_update_user(self,user_dtos:List[UserDTO]) -> HttpResponse:
         pass
+
+    @abstractmethod
+    def get_invalid_user_id_http_error(self, user_ids:List[str]) -> HttpResponse:
+        pass
+
+    def get_bulk_update_not_allowed_http_error(self, fields:List[str]):
+        pass

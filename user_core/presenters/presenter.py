@@ -21,7 +21,7 @@ class Presenter(PresenterInterface):
 
     def get_empty_full_name_http_error(self) -> HttpResponse:
         response_dict = {
-            "message" : "Full name can not be empty"
+            "message" : "full name can not be empty"
         }
         response_json = json.dumps(response_dict)
         return HttpResponse(response_json, content_type='application/json', status=400)
@@ -29,7 +29,7 @@ class Presenter(PresenterInterface):
 
     def get_invalid_mobile_number_http_error(self, mobile_number:str) -> HttpResponse:
         response_dict = {
-            "message" : "Invalid mobile number",
+            "message" : "invalid mobile number",
             "mobile_number": mobile_number
         }
         response_json = json.dumps(response_dict)
@@ -37,7 +37,7 @@ class Presenter(PresenterInterface):
 
     def get_manager_not_found_http_error(self, manager_id:str) -> HttpResponse:
         response_dict = {
-            "message" : "Manager Not Found",
+            "message" : "manager not found",
             "manager_id": manager_id
         }
         response_json = json.dumps(response_dict)
@@ -45,7 +45,7 @@ class Presenter(PresenterInterface):
 
     def get_deactivated_manager_id_http_error(self, manager_id:str) -> HttpResponse:
         response_dict = {
-            "message" : "Manager is Deactivated",
+            "message" : "manager is deactivated",
             "manager_id": manager_id
         }
         response_json = json.dumps(response_dict)
@@ -76,7 +76,7 @@ class Presenter(PresenterInterface):
 
     def get_response_for_delete_user(self,user_id:str) -> HttpResponse:
         response_dict = {
-            "message" : "User Deleted",
+            "message" : "user deleted",
             "user_id": user_id
         }
         response_json = json.dumps(response_dict)
@@ -84,7 +84,7 @@ class Presenter(PresenterInterface):
 
     def get_no_user_deleted_http_error(self) -> HttpResponse:
         response_dict = {
-            "message": "No user found to delete"
+            "message": "no user found to delete"
         }
         response_json = json.dumps(response_dict)
         return HttpResponse(response_json, content_type='application/json', status=404)
@@ -92,8 +92,24 @@ class Presenter(PresenterInterface):
     def get_response_for_update_user(self,user_dtos:List[UserDTO]) -> HttpResponse:
         user_dicts = self._get_user_dicts(user_dtos=user_dtos)
         response_dict = {
-            "message":"Users updated successfully",
+            "message":"users updated successfully",
             "users": user_dicts
         }
         response_json = json.dumps(response_dict)
         return HttpResponse(response_json, content_type='application/json', status=200)
+
+    def get_invalid_user_id_http_error(self, user_ids:List[str]) -> HttpResponse:
+        response_dict = {
+            "message" : "invalid user_ids",
+            "user_ids": user_ids
+        }
+        response_json = json.dumps(response_dict)
+        return HttpResponse(response_json, content_type='application/json', status=404)
+
+    def get_bulk_update_not_allowed_http_error(self, fields:List[str]):
+        response_dict = {
+            "message" : "bulk update not allowed with given fields",
+            "user_ids": fields
+        }
+        response_json = json.dumps(response_dict)
+        return HttpResponse(response_json, content_type='application/json', status=404)
