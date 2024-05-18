@@ -5,11 +5,14 @@ from user_core.storages.user_storage import UserStorage
 from user_core.interactor.get_users import GetUsersInteractor
 from user_core.presenters.presenter import Presenter
 from user_core.dtos import GetUsersParamsDTO
+from user_core.views import GetUsersSerializer
 
 
 @api_view(["POST"])
 def get_users(request):
     post_body = request.data
+    serializer = GetUsersSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
 
     user_dto = GetUsersParamsDTO(
         user_id=post_body.get("user_id"),

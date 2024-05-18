@@ -14,7 +14,7 @@ class UserStorage(UserStorageInterface):
                 name=dto.name,
                 mobile_number=dto.mobile_number,
                 pan_number=dto.pan_number,
-                manager_id=self._get_manager_obj(user_id=dto.manager_id)
+                manager_id=dto.manager_id
             )
             for dto in user_dtos
         ]
@@ -30,7 +30,7 @@ class UserStorage(UserStorageInterface):
                 name=user_obj.name,
                 mobile_number=user_obj.mobile_number,
                 pan_number=user_obj.pan_number,
-                manager_id=str(user_obj.manager_id.id) if user_obj.manager_id else None,
+                manager_id=user_obj.manager_id,
                 is_active=user_obj.is_active,
                 created_at=user_obj.created_at,
                 updated_at=user_obj.updated_at
@@ -79,8 +79,7 @@ class UserStorage(UserStorageInterface):
 
 
         if get_users_params.manager_id:
-            manager_obj = self._get_manager_obj(user_id=get_users_params.manager_id)
-            user_objs = models.User.objects.filter(manager_id=manager_obj.id)
+            user_objs = models.User.objects.filter(manager_id=get_users_params.manager_id)
             return self._create_user_dto_list(user_objs=user_objs)
 
         all_user_objs = models.User.objects.all()
@@ -98,14 +97,13 @@ class UserStorage(UserStorageInterface):
             user = models.User.objects.filter(mobile_number=delete_user_params.mobile_number).first()
 
             if user:
-                deleted_user_id = str(user.id)
+                deleted_user_id = user.id
                 user.delete()
 
         return deleted_user_id
 
     def get_valid_user_ids(self, user_ids:List[str]) -> List[str]:
-        valid_user_ids = models.User.objects.filter(id__in=user_ids).values_list('id', flat=True)
-        return [str(user_id) for user_id in valid_user_ids]
+        return models.User.objects.filter(id__in=user_ids).values_list('id', flat=True)
 
     def update_user_manager_bulk(self, user_ids:List[str], manager_id:str) -> List[UserDTO]:
         manager_user_obj = self._get_manager_obj(user_id=manager_id)

@@ -7,5 +7,10 @@ class CreateUserSerializer(serializers.Serializer):
     pan_num = serializers.CharField(max_length=10)
 
 class DeleteUserSerializer(serializers.Serializer):
-    user_id = serializers.IntegerField()
-    mob_num = serializers.CharField(max_length=15)
+    user_id = serializers.IntegerField(required=False)
+    mob_num = serializers.CharField(max_length=15,required=False)
+
+class GetUsersSerializer(serializers.Serializer):
+    user_id = serializers.CharField(max_length=255,required=False)
+    manager_id = serializers.CharField(max_length=255,required=False)
+    mob_num = serializers.CharField(max_length=15, required=False)
