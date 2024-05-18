@@ -5,11 +5,15 @@ from user_core.storages.user_storage import UserStorage
 from user_core.interactor.create_user import CreateUserInteractor
 from user_core.presenters.presenter import Presenter
 from user_core.dtos import CreateUserParamsDTO
+from user_core.views import CreateUserSerializer
 
 
 @api_view(["POST"])
 def create_user(request):
     post_body = request.data
+    serializer = CreateUserSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+
     user_dto = CreateUserParamsDTO(
         name=post_body["full_name"],
         manager_id=post_body.get("manager_id"),
