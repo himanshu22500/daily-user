@@ -48,3 +48,9 @@ class PresenterInterface:
 
     def get_bulk_update_not_allowed_http_error(self, fields:List[str]):
         pass
+
+    def get_mobile_number_already_exists_http_error(self, mobile_number:str):
+        pass
+
+    def get_pan_number_already_exists_http_error(self, pan_number:str):
+        pass

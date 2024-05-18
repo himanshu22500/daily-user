@@ -1,7 +1,7 @@
 from typing import List
 
 from user_core.exceptions.expections import InvalidManagerId, ManagerDoesNotExists, DeactivatedManager, \
-    InvalidMobileNumber, InvalidUserIds
+    InvalidMobileNumber, InvalidUserIds, MobileNumberAlreadyExists, PanNumberAlreadyExists
 from user_core.interactor.storage_interfaces.user_storage_interface import UserStorageInterface
 import uuid
 
@@ -20,7 +20,7 @@ class ValidationMixin:
             raise DeactivatedManager(manager_id=manager_id)
 
     @staticmethod
-    def validate_and_adjust_pan_number(pan_number:str):
+    def validate_and_adjust_pan_number(user_storage:UserStorageInterface,pan_number:str):
         capitalized_pan_number = ""
         for letter in pan_number:
             if letter.isalpha() and letter.islower():
@@ -28,10 +28,16 @@ class ValidationMixin:
             else:
                 capitalized_pan_number += letter
 
+        user_with_pan_number_exists = user_storage.user_exists_with_given_pan_number(
+            pan_number=capitalized_pan_number
+        )
+        if user_with_pan_number_exists:
+            raise PanNumberAlreadyExists(pan_number=pan_number)
+
         return capitalized_pan_number
 
     @staticmethod
-    def validate_and_adjust_mobile_number(mobile_number:str):
+    def validate_and_adjust_mobile_number(user_storage:UserStorageInterface, mobile_number:str):
         if mobile_number.startswith('0'):
             mobile_number = mobile_number[1:]
         elif mobile_number.startswith('+91'):
@@ -45,8 +51,14 @@ class ValidationMixin:
 
         if not is_mobile_number_valid:
             raise InvalidMobileNumber('Invalid mobile number')
-        else:
-            return mobile_number
+
+        user_with_mobile_number_exists = user_storage.user_exists_with_given_mobile_number(
+            mobile_number=mobile_number
+        )
+        if user_with_mobile_number_exists:
+            raise MobileNumberAlreadyExists(mobile_number=mobile_number)
+
+        return mobile_number
 
     @staticmethod
     def validate_user_ids(user_ids:List[str],user_storage:UserStorageInterface):

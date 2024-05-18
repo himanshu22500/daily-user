@@ -4,7 +4,7 @@ from user_core.dtos import UserDTO, CreateUserParamsDTO
 from user_core.interactor.storage_interfaces.user_storage_interface import UserStorageInterface
 from user_core.interactor.presenter_interfaces.presenter_interface import PresenterInterface
 from user_core.exceptions.expections import FullNameCanNotBeEmpty, InvalidMobileNumber, InvalidManagerId, \
-    ManagerDoesNotExists, DeactivatedManager
+    ManagerDoesNotExists, DeactivatedManager, MobileNumberAlreadyExists, PanNumberAlreadyExists
 from user_core.interactor.validation_mixin import ValidationMixin
 
 
@@ -25,6 +25,10 @@ class CreateUserInteractor(ValidationMixin):
             return presenter.get_manager_not_found_http_error(manager_id=err.manager_id)
         except DeactivatedManager as err:
             return presenter.get_deactivated_manager_id_http_error(manager_id=err.manager_id)
+        except MobileNumberAlreadyExists as err:
+            return presenter.get_mobile_number_already_exists_http_error(mobile_number=err.mobile_number)
+        except PanNumberAlreadyExists as err:
+            return presenter.get_pan_number_already_exists_http_error(pan_number=err.pan_number)
         else:
             return presenter.get_response_for_create_user(user_dto=user_dto)
 
@@ -37,10 +41,10 @@ class CreateUserInteractor(ValidationMixin):
         if not user_dto.name:
             raise FullNameCanNotBeEmpty()
 
-        mobile_number = self.validate_and_adjust_mobile_number(mobile_number=user_dto.mobile_number)
+        mobile_number = self.validate_and_adjust_mobile_number(user_storage=self.user_storage,mobile_number=user_dto.mobile_number)
         user_dto.mobile_number = mobile_number
 
-        pan_number = self.validate_and_adjust_pan_number(pan_number=user_dto.pan_number)
+        pan_number = self.validate_and_adjust_pan_number(user_storage=self.user_storage,pan_number=user_dto.pan_number)
         user_dto.pan_number = pan_number
 
         if user_dto.manager_id:

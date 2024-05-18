@@ -1,6 +1,8 @@
 from typing import List, Optional
+from datetime import datetime
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import IntegrityError
 
 from user_core.dtos import UserDTO, CreateUserParamsDTO, GetUsersParamsDTO, DeleteUserParamsDTO, UpdateUserParamsDTO
 from user_core.interactor.storage_interfaces.user_storage_interface import UserStorageInterface
@@ -12,7 +14,6 @@ class UserStorage(UserStorageInterface):
                 name=dto.name,
                 mobile_number=dto.mobile_number,
                 pan_number=dto.pan_number,
-                is_active=True,
                 manager_id=self._get_manager_obj(user_id=dto.manager_id)
             )
             for dto in user_dtos
@@ -111,6 +112,7 @@ class UserStorage(UserStorageInterface):
         user_objs = models.User.objects.filter(id__in=user_ids)
         for user_obj in user_objs:
             user_obj.manager_id = manager_user_obj
+            user_obj.updated_at = datetime.now()
 
         models.User.objects.bulk_update(user_objs, fields=["manager_id"])
         return self._create_user_dto_list(user_objs=user_objs)
@@ -131,7 +133,13 @@ class UserStorage(UserStorageInterface):
             manager_user_obj = self._get_manager_obj(user_id=update_user_params_dto.manager_id)
             user_obj.manager_id = manager_user_obj
 
-
+        user_obj.updated_at = datetime.now()
         user_obj.save()
         return self._create_user_dto(user_obj=user_obj)
+
+    def user_exists_with_given_mobile_number(self, mobile_number:str) -> bool:
+        return models.User.objects.filter(mobile_number=mobile_number).exists()
+
+    def user_exists_with_given_pan_number(self, pan_number:str) -> bool:
+        return models.User.objects.filter(pan_number=pan_number).exists()
 

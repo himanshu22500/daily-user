@@ -30,3 +30,12 @@ class InvalidUserIds(Exception):
 class InvalidParamsForBulkUpdate(Exception):
     def __init__(self, fields:List[str]):
         self.fields = fields
+
+class MobileNumberAlreadyExists(Exception):
+    def __init__(self, mobile_number:str):
+        self.mobile_number = mobile_number
+
+
+class PanNumberAlreadyExists(Exception):
+    def __init__(self, pan_number:str):
+        self.pan_number = pan_number

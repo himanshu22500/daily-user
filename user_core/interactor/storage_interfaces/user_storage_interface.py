@@ -35,3 +35,11 @@ class UserStorageInterface:
     @abstractmethod
     def update_user_data(self, user_id:str, update_user_params_dto:UpdateUserParamsDTO) -> UserDTO:
         pass
+
+    @abstractmethod
+    def user_exists_with_given_mobile_number(self, mobile_number:str) -> bool:
+        pass
+
+    @abstractmethod
+    def user_exists_with_given_pan_number(self, pan_number:str) -> bool:
+        pass
