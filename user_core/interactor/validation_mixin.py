@@ -1,5 +1,7 @@
+from typing import List
+
 from user_core.exceptions.expections import InvalidManagerId, ManagerDoesNotExists, DeactivatedManager, \
-    InvalidMobileNumber
+    InvalidMobileNumber, InvalidUserIds
 from user_core.interactor.storage_interfaces.user_storage_interface import UserStorageInterface
 import uuid
 
@@ -45,6 +47,18 @@ class ValidationMixin:
             raise InvalidMobileNumber('Invalid mobile number')
         else:
             return mobile_number
+
+    @staticmethod
+    def validate_user_ids(user_ids:List[str],user_storage:UserStorageInterface):
+        valid_user_ids = user_storage.get_valid_user_ids(user_ids=user_ids)
+        invalid_user_ids = [
+            user_id
+            for user_id in user_ids
+            if user_id not in  valid_user_ids
+        ]
+
+        if invalid_user_ids:
+            raise InvalidUserIds(user_ids=invalid_user_ids)
 
     @staticmethod
     def is_valid_uuid_v4(uuid_str):

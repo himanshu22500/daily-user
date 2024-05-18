@@ -53,7 +53,7 @@ class UpdateUserInteractor(ValidationMixin):
 
 
     def validate_update_params(self, update_user_params_dto:UpdateUserParamsDTO):
-        self.validate_user_ids(user_ids=update_user_params_dto.user_ids)
+        self.validate_user_ids(user_ids=update_user_params_dto.user_ids, user_storage=self.user_storage)
         self.validate_bulk_update_case(update_user_params_dto=update_user_params_dto)
 
         if update_user_params_dto.manager_id:
@@ -61,17 +61,6 @@ class UpdateUserInteractor(ValidationMixin):
 
         if update_user_params_dto.mobile_number:
             self.validate_and_adjust_mobile_number(mobile_number=update_user_params_dto.mobile_number)
-
-    def validate_user_ids(self, user_ids:List[str]):
-        valid_user_ids = self.user_storage.get_valid_user_ids(user_ids=user_ids)
-        invalid_user_ids = [
-            user_id
-            for user_id in user_ids
-            if user_id not in  valid_user_ids
-        ]
-
-        if invalid_user_ids:
-            raise InvalidUserIds(user_ids=invalid_user_ids)
 
     def validate_bulk_update_case(self, update_user_params_dto:UpdateUserParamsDTO):
         more_then_one_user_id_given = len(update_user_params_dto.user_ids) > 1
