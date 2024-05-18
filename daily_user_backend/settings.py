@@ -27,9 +27,6 @@ SECRET_KEY = 'django-insecure-akk+7#edr@_nw=)6$5&q=(=5f&szd)#m!801sord=p#5!10lq7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -128,3 +125,4 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+ALLOWED_HOSTS = ["localhost", "lbkeakdhp4.execute-api.ap-south-1.amazonaws.com"]
