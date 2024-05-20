@@ -5,10 +5,14 @@ from user_core.storages.user_storage import UserStorage
 from user_core.interactor.update_user import UpdateUserInteractor
 from user_core.presenters.presenter import Presenter
 from user_core.dtos import UpdateUserParamsDTO
+from user_core.views import UpdateUserSerializer
 
 
 @api_view(["POST"])
 def update_user(request):
+    serializer = UpdateUserSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+
     post_body = request.data
     update_data = post_body["update_data"]
     update_user_params_dto = UpdateUserParamsDTO(

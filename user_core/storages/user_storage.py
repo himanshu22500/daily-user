@@ -45,7 +45,7 @@ class UserStorage(UserStorageInterface):
                 name=user_obj.name,
                 mobile_number=user_obj.mobile_number,
                 pan_number=user_obj.pan_number,
-                manager_id=str(user_obj.manager_id.id) if user_obj.manager_id else None,
+                manager_id=user_obj.manager_id,
                 is_active=user_obj.is_active,
                 created_at=user_obj.created_at,
                 updated_at=user_obj.updated_at
@@ -128,8 +128,7 @@ class UserStorage(UserStorageInterface):
             user_obj.mobile_number = update_user_params_dto.mobile_number
 
         if update_user_params_dto.manager_id:
-            manager_user_obj = self._get_manager_obj(user_id=update_user_params_dto.manager_id)
-            user_obj.manager_id = manager_user_obj
+            user_obj.manager_id = update_user_params_dto.manager_id
 
         user_obj.updated_at = datetime.now()
         user_obj.save()

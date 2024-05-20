@@ -14,3 +14,8 @@ class GetUsersSerializer(serializers.Serializer):
     user_id = serializers.CharField(max_length=255,required=False)
     manager_id = serializers.CharField(max_length=255,required=False)
     mob_num = serializers.CharField(max_length=15, required=False)
+
+
+class UpdateUserSerializer(serializers.Serializer):
+    user_ids = serializers.ListField(child=serializers.CharField(max_length=255), required=True)
+    update_data = serializers.DictField(required=True)
