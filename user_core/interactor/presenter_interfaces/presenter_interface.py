@@ -46,11 +46,14 @@ class PresenterInterface:
     def get_invalid_user_id_http_error(self, user_ids:List[str]) -> HttpResponse:
         pass
 
-    def get_bulk_update_not_allowed_http_error(self, fields:List[str]):
+    def get_bulk_update_not_allowed_http_error(self, fields:List[str])-> HttpResponse:
         pass
 
-    def get_mobile_number_already_exists_http_error(self, mobile_number:str):
+    def get_mobile_number_already_exists_http_error(self, mobile_number:str)-> HttpResponse:
         pass
 
-    def get_pan_number_already_exists_http_error(self, pan_number:str):
+    def get_pan_number_already_exists_http_error(self, pan_number:str)-> HttpResponse:
+        pass
+
+    def get_invalid_pan_number_http_error(self, pan_number:str)-> HttpResponse:
         pass

@@ -4,7 +4,8 @@ from django.http import HttpResponse
 
 from user_core.dtos import UpdateUserParamsDTO, UserDTO
 from user_core.exceptions.expections import InvalidUserIds, InvalidParamsForBulkUpdate, ManagerDoesNotExists, \
-    InvalidManagerId, DeactivatedManager, InvalidMobileNumber, MobileNumberAlreadyExists, PanNumberAlreadyExists
+    InvalidManagerId, DeactivatedManager, InvalidMobileNumber, MobileNumberAlreadyExists, PanNumberAlreadyExists, \
+    InvalidPanNumber
 from user_core.interactor.presenter_interfaces.presenter_interface import PresenterInterface
 from user_core.interactor.storage_interfaces.user_storage_interface import UserStorageInterface
 from user_core.constants.enums import UserDataField
@@ -34,6 +35,8 @@ class UpdateUserInteractor(ValidationMixin):
             return presenter.get_mobile_number_already_exists_http_error(mobile_number=err.mobile_number)
         except PanNumberAlreadyExists as err:
             return presenter.get_pan_number_already_exists_http_error(pan_number=err.pan_number)
+        except InvalidPanNumber as err:
+            return presenter.get_invalid_pan_number_http_error(pan_number=err.pan_number)
         else:
             return presenter.get_response_for_update_user(user_dtos=user_dtos)
 
@@ -64,10 +67,19 @@ class UpdateUserInteractor(ValidationMixin):
             self.validate_manager_id(user_storage=self.user_storage,manager_id=update_user_params_dto.manager_id)
 
         if update_user_params_dto.mobile_number:
-            self.validate_and_adjust_mobile_number(user_storage=self.user_storage,mobile_number=update_user_params_dto.mobile_number)
+            adjusted_mobile_number = self.validate_and_adjust_mobile_number(
+                user_storage=self.user_storage,
+                mobile_number=update_user_params_dto.mobile_number
+            )
+            update_user_params_dto.mobile_number = adjusted_mobile_number
+
 
         if update_user_params_dto.pan_number:
-            self.validate_and_adjust_pan_number(user_storage=self.user_storage,pan_number=update_user_params_dto.pan_number)
+            adjusted_pan_number = self.validate_and_adjust_pan_number(
+                user_storage=self.user_storage,
+                pan_number=update_user_params_dto.pan_number,
+            )
+            update_user_params_dto.pan_number = adjusted_pan_number
 
     def validate_bulk_update_case(self, update_user_params_dto:UpdateUserParamsDTO):
         more_then_one_user_id_given = len(update_user_params_dto.user_ids) > 1

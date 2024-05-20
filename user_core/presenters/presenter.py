@@ -129,3 +129,11 @@ class Presenter(PresenterInterface):
         }
         response_json = json.dumps(response_dict)
         return HttpResponse(response_json, content_type='application/json', status=404)
+
+    def get_invalid_pan_number_http_error(self, pan_number:str)-> HttpResponse:
+        response_dict = {
+            "message" : "invalid pan number",
+            "pan_num": pan_number
+        }
+        response_json = json.dumps(response_dict)
+        return HttpResponse(response_json, content_type='application/json', status=404)

@@ -4,7 +4,7 @@ from user_core.dtos import UserDTO, CreateUserParamsDTO
 from user_core.interactor.storage_interfaces.user_storage_interface import UserStorageInterface
 from user_core.interactor.presenter_interfaces.presenter_interface import PresenterInterface
 from user_core.exceptions.expections import FullNameCanNotBeEmpty, InvalidMobileNumber, InvalidManagerId, \
-    ManagerDoesNotExists, DeactivatedManager, MobileNumberAlreadyExists, PanNumberAlreadyExists
+    ManagerDoesNotExists, DeactivatedManager, MobileNumberAlreadyExists, PanNumberAlreadyExists, InvalidPanNumber
 from user_core.interactor.validation_mixin import ValidationMixin
 
 
@@ -29,6 +29,8 @@ class CreateUserInteractor(ValidationMixin):
             return presenter.get_mobile_number_already_exists_http_error(mobile_number=err.mobile_number)
         except PanNumberAlreadyExists as err:
             return presenter.get_pan_number_already_exists_http_error(pan_number=err.pan_number)
+        except InvalidPanNumber as err:
+            return presenter.get_invalid_pan_number_http_error(pan_number=err.pan_number)
         else:
             return presenter.get_response_for_create_user(user_dto=user_dto)
 

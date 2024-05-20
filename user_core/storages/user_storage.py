@@ -106,10 +106,9 @@ class UserStorage(UserStorageInterface):
         return models.User.objects.filter(id__in=user_ids).values_list('id', flat=True)
 
     def update_user_manager_bulk(self, user_ids:List[str], manager_id:str) -> List[UserDTO]:
-        manager_user_obj = self._get_manager_obj(user_id=manager_id)
         user_objs = models.User.objects.filter(id__in=user_ids)
         for user_obj in user_objs:
-            user_obj.manager_id = manager_user_obj
+            user_obj.manager_id = manager_id
             user_obj.updated_at = datetime.now()
 
         models.User.objects.bulk_update(user_objs, fields=["manager_id"])

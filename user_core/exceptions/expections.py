@@ -8,6 +8,10 @@ class InvalidMobileNumber(Exception):
     def __init__(self, mobile_number:str):
         self.mobile_number = mobile_number
 
+class InvalidPanNumber(Exception):
+    def __init__(self, pan_number:str):
+        self.pan_number = pan_number
+
 class InvalidManagerId(Exception):
     def __init__(self, manager_id:str):
         self.manager_id = manager_id
